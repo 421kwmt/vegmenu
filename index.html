@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>野菜販売メニュー</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body { background: #f7f7f2; }
+    .hero {
+      background: linear-gradient(120deg, #6bbf59, #a8e063);
+      color: #fff;
+      padding: 60px 20px;
+      text-align: center;
+    }
+    .section-title {
+      border-left: 6px solid #6bbf59;
+      padding-left: 12px;
+      margin: 40px 0 20px;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #2f5d3b;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="hero">
+  <h1>野菜販売メニュー</h1>
+  <p>石川県小松市より、新鮮な採れたて野菜をお届けします。</p>
+</div>
+
+<div class="container py-4">
+
+  <!-- 葉物野菜 -->
+  <div class="section-title">🥬 葉物野菜</div>
+  <div id="leafy" class="row g-4"></div>
+
+  <!-- 根菜類 -->
+  <div class="section-title">🥕 根菜類</div>
+  <div id="root" class="row g-4"></div>
+
+  <!-- 実野菜 -->
+  <div class="section-title">🍅 実野菜</div>
+  <div id="fruit" class="row g-4"></div>
+
+  <!-- その他 -->
+  <div class="section-title">🌽 その他の野菜</div>
+  <div id="other" class="row g-4"></div>
+
+  <!-- お問い合わせ -->
+  <div class="section-title mt-5">📦 ご注文・お問い合わせ</div>
+  <div class="p-4 bg-light border rounded">
+    <p>電話：0761-XXX-XXXX</p>
+    <p>メール：info@example.com</p>
+    <p>直売所：石川県小松市 ○○町</p>
+  </div>
+
+</div>
+
+<footer class="text-center py-4 text-muted">
+  &copy; 野菜直売所（石川県小松市）
+</footer>
+
+<!-- JavaScript（データ＋生成処理） -->
+<script>
+  // -----------------------------
+  // ① 野菜データ（ここだけ編集すればOK）
+  // -----------------------------
+  const vegetables = [
+    { name: "ほうれん草", desc: "朝採れの柔らかい葉。おひたしやソテーに。", price: "200円〜", season: "冬〜春", img: "images/horenso.jpg", category: "leafy" },
+    { name: "小松菜", desc: "シャキッとした食感。炒め物や味噌汁に。", price: "180円〜", season: "通年", img: "images/komatsuna.jpg", category: "leafy" },
+    { name: "レタス", desc: "みずみずしくサラダに最適。", price: "220円〜", season: "春〜夏", img: "images/lettuce.jpg", category: "leafy" },
+    { name: "キャベツ", desc: "甘みが強く、生でも加熱でも美味しい。", price: "200円〜", season: "冬〜春", img: "images/cabbage.jpg", category: "leafy" },
+
+    { name: "にんじん", desc: "色鮮やかで甘みたっぷり。", price: "180円〜", season: "冬〜春", img: "images/carrot.jpg", category: "root" },
+    { name: "大根", desc: "みずみずしく煮物に最適。", price: "200円〜", season: "冬", img: "images/daikon.jpg", category: "root" },
+    { name: "じゃがいも", desc: "ホクホク食感。", price: "200円〜", season: "通年", img: "images/potato.jpg", category: "root" },
+    { name: "さつまいも", desc: "甘くてしっとり。焼き芋にも。", price: "220円〜", season: "秋〜冬", img: "images/satsumaimo.jpg", category: "root" },
+
+    { name: "トマト", desc: "甘みと酸味のバランスが絶妙。", price: "250円〜", season: "夏", img: "images/tomato.jpg", category: "fruit" },
+    { name: "ミニトマト", desc: "お弁当に便利。", price: "200円〜", season: "夏", img: "images/minitomato.jpg", category: "fruit" },
+    { name: "きゅうり", desc: "パリッとした食感。", price: "180円〜", season: "夏", img: "images/cucumber.jpg", category: "fruit" },
+    { name: "ピーマン", desc: "肉厚で苦味が少ない。", price: "180円〜", season: "夏", img: "images/pepper.jpg", category: "fruit" },
+    { name: "なす", desc: "とろける食感。", price: "200円〜", season: "夏〜秋", img: "images/eggplant.jpg", category: "fruit" },
+
+    { name: "とうもろこし", desc: "甘くて粒が大きい。", price: "250円〜", season: "夏", img: "images/corn.jpg", category: "other" },
+    { name: "ブロッコリー", desc: "栄養満点。", price: "220円〜", season: "冬〜春", img: "images/broccoli.jpg", category: "other" },
+    { name: "カリフラワー", desc: "クセがなく万能。", price: "220円〜", season: "冬〜春", img: "images/cauliflower.jpg", category: "other" },
+    { name: "オクラ", desc: "ネバネバ食感が夏にぴったり。", price: "180円〜", season: "夏", img: "images/okra.jpg", category: "other" },
+    { name: "白菜", desc: "鍋料理に最適。", price: "220円〜", season: "冬", img: "images/hakusai.jpg", category: "other" }
+  ];
+
+  // -----------------------------
+  // ② HTML生成処理（テンプレート）
+  // -----------------------------
+  function createCard(v) {
+    return `
+      <div class="col-md-3 col-sm-6">
+        <div class="card shadow-sm">
+          <img src="${v.img}" class="card-img-top" alt="${v.name}">
+          <div class="card-body">
+            <h5 class="card-title">${v.name}</h5>
+            <p class="card-text small">${v.desc}</p>
+            <p class="text-success small">旬：${v.season} / ${v.price}</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // カテゴリごとに挿入
+  vegetables.forEach(v => {
+    document.getElementById(v.category).innerHTML += createCard(v);
+  });
+</script>
+
+</body>
+</html>
