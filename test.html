@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>商品説明画面</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .price {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color:  black;
+        }
+        .carousel-item img {
+            width: 100%;
+            max-height: 350px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<div class="container py-4">
+
+    <!-- 戻るボタン -->
+    <button class="btn btn-secondary mb-3" onclick="window.close();">← 戻る</button>
+
+    <!-- 商品名 -->
+    <h2 id="productName" class="mb-3"></h2>
+
+    <!-- 画像カルーセル（自動スクロールなし） -->
+    <div id="productCarousel" class="carousel slide mb-4">
+
+        <!-- ドット（インジケーター） -->
+        <div class="carousel-indicators" id="carouselIndicators"></div>
+
+        <!-- 画像本体 -->
+        <div class="carousel-inner" id="carouselImages"></div>
+
+        <!-- 前後ボタン -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+
+    <!-- 価格 -->
+    <div id="price" class="price mb-3"></div>
+
+    <!-- 説明文 -->
+    <p id="description" class="fs-5"></p>
+
+    <!-- ▼ 2列の表（行はデータ数だけ） -->
+    <table class="table table-bordered mb-4" id="infoTable"></table>
+
+    <!-- 注意書き -->
+    <p id="note" class="fs-5"></p>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+/*-------------------------------------------
+    ★ 商品情報（ここだけ変更すればOK）
+-------------------------------------------*/
+const productData = {
+    name: "iiyama PC STYLE-14FH130-C5-UH5X",
+    price: "60,000円",
+
+    description: `
+インテル® Core™ 5 プロセッサー 120U搭載14型フルHDモバイルノートパソコン
+`,
+
+    images: [
+        "images/pc1.jpg",
+        "images/pc2.jpg",
+        "images/pc3.jpg",
+        "images/pc4.jpg",
+        "images/pc5.jpg"
+    ],
+
+    /* ▼ 表に入れるデータ（2列固定） */
+    tableRows: [
+["モデル名", "STYLE-14FH130-C5-UH5X"], 
+["型番", "IStNEi-14FH130-C5-UH5XB"],
+["OS", "Windows 11 Home"],
+["液晶形状", "14型(非光沢カラー液晶)"],
+["解像度", "フルHD(1920×1080ドット)"],
+["CPU型番", "インテル® Core™ 5 プロセッサー 120U"],
+["コア数", "10コア(5.0GHz 2コア ,3.80GHz 8コア)"],
+["スレッド数", "12スレッド"],
+["最大クロック数", "5.0GHz"],
+["グラフィックス", "Intel Graphics"],
+["メモリ規格", "DDR4-3200 S.O.DIMM (PC4-25600)"],
+["メモリ容量", "8GB(8GB×1)"],
+["メモリスロット数", "2"],
+["1stストレージ", "500GB NVMe対応 M.2 SSD"],
+["光学ドライブ", "光学ドライブ非搭載"],
+["カメラ", "100万画素"],
+["有線LAN機能", "1000BASE-T LANポート"],
+["無線機能", "Wi-Fi 6E (IEEE802.11 ax/ac/n/g/b/a)対応 無線LAN + Bluetooth® 5"],
+["キーボード", "日本語キーボード"],
+["マウス・ポインティングデバイス", "マルチタッチ対応タッチパッド"],
+["電源", "ACアダプターまたはリチウムイオンバッテリー"],
+["外部端子", "ヘッドフォン出力/マイク入力×1 ,Thunderbolt 4ポート×1(Type-C×1) ,USB3.0×1(Type-C) ,USB3.0×1 ,USB2.0×1 ,ディスプレイ出力(HDMI×1)"],
+["内部端子", "M.2_1(Key ID:M/Type:2280 PCIe4.0×4対応)"],
+["主な付属品", "ACアダプターセット ,各種マニュアル ,保証書"],
+["重量", "約1.34kg(バッテリー含む) ※カスタマイズ内容により重量は異なります"],
+["サイズ", "約幅325mm×奥行216mm×高さ24.1mm(※ゴム足含む)"]
+    ],
+
+    note: `
+※写真はイメージです。実物とは色合い・形状など多少異なる場合があります。
+※USB3.0ポートは、USB2.0ポートとして使用可能です。
+※価格・仕様・モデル名等に関しましては予告なく変更することがございます。
+※上記は基本構成時の仕様となります。
+※マイニング用途は動作保証の対象外とさせていただきます。
+※OSインストールメディアは付属致しません。
+`
+
+};
+
+/*-------------------------------------------
+    ★ 画面へ反映
+-------------------------------------------*/
+document.getElementById("productName").textContent = productData.name;
+document.getElementById("price").textContent = productData.price;
+
+// 説明文（複数行 → <br>、行頭スペース → &nbsp;）
+document.getElementById("description").innerHTML =
+    productData.description
+        .trim()
+        .replace(/^ +/gm, spaces => spaces.replace(/ /g, "&nbsp;"))
+        .replace(/\n/g, "<br>");
+
+document.getElementById("note").innerHTML =
+    productData.note
+        .trim()
+        .replace(/^ +/gm, spaces => spaces.replace(/ /g, "&nbsp;"))
+        .replace(/\n/g, "<br>");
+
+/*-------------------------------------------
+    ★ 画像カルーセルへ反映（ドット付き）
+-------------------------------------------*/
+const carouselImages = document.getElementById("carouselImages");
+const carouselIndicators = document.getElementById("carouselIndicators");
+
+productData.images.forEach((src, index) => {
+    const div = document.createElement("div");
+    div.className = "carousel-item" + (index === 0 ? " active" : "");
+    div.innerHTML = `<img src="${src}" class="d-block w-100">`;
+    carouselImages.appendChild(div);
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.setAttribute("data-bs-target", "#productCarousel");
+    button.setAttribute("data-bs-slide-to", index);
+    if (index === 0) button.classList.add("active");
+    carouselIndicators.appendChild(button);
+});
+
+/*-------------------------------------------
+    ★ 表（2列 × 行はデータ数だけ）を生成
+-------------------------------------------*/
+const infoTable = document.getElementById("infoTable");
+
+productData.tableRows.forEach(row => {
+    const tr = document.createElement("tr");
+
+    const td1 = document.createElement("td");
+    td1.textContent = row[0];
+
+    const td2 = document.createElement("td");
+    td2.textContent = row[1];
+
+    tr.appendChild(td1);
+    tr.appendChild(td2);
+
+    infoTable.appendChild(tr);
+});
+</script>
+
+</body>
+</html>
